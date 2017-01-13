@@ -143,7 +143,7 @@ func DefaultReporter(label string, timeframe time.Duration, value float64) {
 		log.Printf("%s: %s/day in %v", label, floatFmt(value), timeframe)
 	default:
 		log.Printf("%s %s in %v (pace: %s/s)", floatFmt(value), label,
-			timeframe, floatFmt(value/float64(timeframe)/float64(time.Second)))
+			timeframe, floatFmt(value/(float64(timeframe)/float64(time.Second))))
 	}
 }
 
