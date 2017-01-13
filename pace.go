@@ -1,4 +1,4 @@
-// Pace is a Go package that provides a threadsafe counter for measuring ticks in the specified timeframe.
+// Package pace provides a threadsafe counter for measuring ticks in the specified timeframe.
 package pace
 
 import (
