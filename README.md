@@ -96,4 +96,4 @@ ok      github.com/xlab/pace    12.006s
 
 ### License
 
-MIT
+[MIT](/LICENSE.txt)
