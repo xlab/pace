@@ -130,7 +130,7 @@ type ReporterFunc func(label string, timeframe time.Duration, value float64)
 // DefaultReporter reports using log.Printf.
 func DefaultReporter(label string, timeframe time.Duration, value float64) {
 	floatFmt := func(f float64) string {
-		return strconv.FormatFloat(value, 'f', -1, 64)
+		return strconv.FormatFloat(f, 'f', -1, 64)
 	}
 	switch timeframe {
 	case time.Second:
