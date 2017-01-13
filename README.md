@@ -16,7 +16,7 @@ type Pace interface {
     Step(n float64)
     // Pause stops reporting until resumed, all steps continue to be counted.
     Pause()
-    // Resume resumes the reporting, starting a report with info since the last tick.
+    // Resume resumes the reporting, immediately reports info since the last tick.
     // Specify a new interval or 0 if you don't want to override it.
     Resume(interval time.Duration)
     // Report manually triggers a report with time frame less than the defined interval.
