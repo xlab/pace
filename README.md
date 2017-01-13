@@ -1,10 +1,10 @@
-## Pace [![GoDoc](https://godoc.org/github.com/xlab/pace?status.svg)](https://godoc.org/github.com/xlab/pace) [![Go Report Card](https://goreportcard.com/badge/github.com/xlab/pace)](https://goreportcard.com/report/github.com/xlab/pace)
-
-![pace](https://cl.ly/2P163D3Q0O03/pace.gif)
+## Pace [![GoDoc](https://godoc.org/github.com/xlab/pace?status.svg)](https://godoc.org/github.com/xlab/pace) [![Go Report Card](http://goreportcard.com/badge/github.com/xlab/pace)](http://goreportcard.com/report/github.com/xlab/pace)
 
 Pace is a Go package that helps to answer one simple question:
 
 > how fast it goes?
+
+![pace](https://cl.ly/2P163D3Q0O03/pace.gif)
 
 It's a threadsafe counter that measures ticks in the specified timeframe. It also has a simple and intuitive interface:
 
