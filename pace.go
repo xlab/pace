@@ -11,7 +11,9 @@ import (
 // Pace is a an interface to register ticks, force reporting and pause/resume the meter.
 type Pace interface {
 	// Step increments the counter of pace.
-	Step(n float64)
+	Step(f float64)
+	// StepN increments the counter of pace, using integer N.
+	StepN(n int)
 	// Pause stops reporting until resumed, all steps continue to be counted.
 	Pause()
 	// Resume resumes the reporting, starting a report with info since the last tick.
@@ -34,9 +36,15 @@ type paceImpl struct {
 	t        *time.Timer
 }
 
-func (p *paceImpl) Step(n float64) {
+func (p *paceImpl) Step(f float64) {
 	p.mux.Lock()
-	p.value += n
+	p.value += f
+	p.mux.Unlock()
+}
+
+func (p *paceImpl) StepN(n int) {
+	p.mux.Lock()
+	p.value += float64(n)
 	p.mux.Unlock()
 }
 
