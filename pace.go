@@ -147,10 +147,15 @@ func DefaultReporter() ReporterFunc {
 			dur := timeframe
 			if !stalled.IsZero() {
 				dur = time.Since(stalled)
+				n := dur / timeframe
+				if dur-n*timeframe < 10*time.Millisecond {
+					dur = n * timeframe
+				}
 			} else {
 				stalled = time.Now().Add(-dur)
 			}
 			log.Printf("%s: stalled for %v", label, dur)
+			return
 		default:
 			previous = value
 			stalled = time.Time{}

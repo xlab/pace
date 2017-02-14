@@ -38,6 +38,9 @@ func TestSimple(t *testing.T) {
 	push(500*time.Millisecond, 3*time.Second)
 
 	wg.Wait()
+	time.Sleep(3 * time.Second)
+	push(10*time.Millisecond, 3*time.Second)
+	time.Sleep(3 * time.Second)
 	p.Report(nil)
 	log.Println("done")
 }
