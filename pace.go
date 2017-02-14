@@ -105,7 +105,7 @@ func (p *paceImpl) report(reporter ReporterFunc) {
 // All ticks (or steps) are aggregated in timeframes specified using interval.
 func New(label string, interval time.Duration, repFn ReporterFunc) Pace {
 	if repFn == nil {
-		repFn = DefaultReporter
+		repFn = DefaultReporter()
 	}
 	p := &paceImpl{
 		mux: new(sync.RWMutex),
@@ -135,23 +135,42 @@ func New(label string, interval time.Duration, repFn ReporterFunc) Pace {
 // ReporterFunc defines a function used to report current pace.
 type ReporterFunc func(label string, timeframe time.Duration, value float64)
 
-// DefaultReporter reports using log.Printf.
-func DefaultReporter(label string, timeframe time.Duration, value float64) {
-	floatFmt := func(f float64) string {
-		return strconv.FormatFloat(f, 'f', 3, 64)
-	}
-	switch timeframe {
-	case time.Second:
-		log.Printf("%s: %s/s in %v", label, floatFmt(value), timeframe)
-	case time.Minute:
-		log.Printf("%s: %s/m in %v", label, floatFmt(value), timeframe)
-	case time.Hour:
-		log.Printf("%s: %s/h in %v", label, floatFmt(value), timeframe)
-	case 24 * time.Hour:
-		log.Printf("%s: %s/day in %v", label, floatFmt(value), timeframe)
-	default:
-		log.Printf("%s %s in %v (pace: %s/s)", floatFmt(value), label,
-			timeframe, floatFmt(value/(float64(timeframe)/float64(time.Second))))
+// DefaultReporter reports using log.Printf and stops reporting when flow of events is stoped.
+func DefaultReporter() ReporterFunc {
+	var previous float64
+	var stalled time.Time
+	return func(label string, timeframe time.Duration, value float64) {
+		switch {
+		case value == 0 && previous == 0:
+			return // don't report anything
+		case value == 0 && previous != 0:
+			dur := timeframe
+			if !stalled.IsZero() {
+				dur = time.Since(stalled)
+			} else {
+				stalled = time.Now().Add(-dur)
+			}
+			log.Printf("%s: stalled for %v", label, dur)
+		default:
+			previous = value
+			stalled = time.Time{}
+		}
+		floatFmt := func(f float64) string {
+			return strconv.FormatFloat(f, 'f', 3, 64)
+		}
+		switch timeframe {
+		case time.Second:
+			log.Printf("%s: %s/s in %v", label, floatFmt(value), timeframe)
+		case time.Minute:
+			log.Printf("%s: %s/m in %v", label, floatFmt(value), timeframe)
+		case time.Hour:
+			log.Printf("%s: %s/h in %v", label, floatFmt(value), timeframe)
+		case 24 * time.Hour:
+			log.Printf("%s: %s/day in %v", label, floatFmt(value), timeframe)
+		default:
+			log.Printf("%s %s in %v (pace: %s/s)", floatFmt(value), label,
+				timeframe, floatFmt(value/(float64(timeframe)/float64(time.Second))))
+		}
 	}
 }
 
